@@ -24,17 +24,63 @@ int main(int argv, char** argc){
   }
 
   //Read each file
-  while (getline (cardFile1, line) && (line.length() > 0)){
+  std::set<Card> aliceSet;
+  std::set<Card> bobSet;
 
+  while (getline (cardFile1, line) && (line.length() > 0)){
+      char suit = line[0];
+      string strVal = line.substr(2);
+      int value = Card::valueFromString(strVal);
+      aliceSet.insert(Card(suit, value));
   }
   cardFile1.close();
 
-
   while (getline (cardFile2, line) && (line.length() > 0)){
-
+    char suit = line[0];
+    string strVal = line.substr(2);
+    int value = Card::valueFromString(strVal);
+    bobSet.insert(Card(suit, value));
   }
   cardFile2.close();
   
-  
+  bool turnAlice = true;
+  while (true) {
+    bool cardMatch = false;
+    if (turnAlice) {
+      for (auto it = aliceSet.begin(); it != aliceSet.end(); it++) {
+        if (bobSet.find(*it) != bobSet.end()) {
+          cout << "Alice picked matching card " << *it << endl;
+          bobSet.erase(*it);
+          aliceSet.erase(it);
+          cardMatch = true;
+          break;
+        }
+      }
+    }
+    else {
+      for (auto it = bobSet.end(); it != bobSet.begin();) {
+        it--;
+        if (aliceSet.find(*it) != aliceSet.end()) {
+          cout << "Bob picked matching card " << *it << endl;
+          aliceSet.erase(*it);
+          bobSet.erase(it);
+          cardMatch = true;
+          break;
+        }
+      }
+    }
+    if (!cardMatch) {
+      break;
+    }
+    turnAlice = !turnAlice;
+  }
+  cout << "Alice's cards: " << endl;
+  for (auto it = aliceSet.begin(); it != aliceSet.end(); ++it) {
+    cout << *it << endl;
+  }
+  cout << "Bob's cards: " << endl;
+  for (auto it = bobSet.begin(); it != bobSet.end(); ++it) {
+    cout << *it << endl;
+  }
   return 0;
 }

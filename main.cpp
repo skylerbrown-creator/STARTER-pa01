@@ -24,17 +24,25 @@ int main(int argv, char** argc){
   }
 
   //Read each file
-  while (getline (cardFile1, line) && (line.length() > 0)){
-
+  CardBST aliceSet;
+  CardBST bobSet;
+  while (getline (cardFile1, line) && (line.length() > 0)) {
+    char suit = line[0];
+    string strVal = line.substr(2);
+    int value = Card::valueFromString(strVal);
+    aliceSet.insert(Card(suit, value));
   }
   cardFile1.close();
 
 
   while (getline (cardFile2, line) && (line.length() > 0)){
-
+    char suit = line[0];
+    string strVal = line.substr(2);
+    int value = Card::valueFromString(strVal);
+    bobSet.insert(Card(suit, value));
   }
   cardFile2.close();
-  
+  playGame(aliceSet, bobSet);
   
   return 0;
 }
