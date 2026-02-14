@@ -74,11 +74,11 @@ int main(int argv, char** argc){
     }
     turnAlice = !turnAlice;
   }
-  cout << "Alice's cards: " << endl;
+  cout << "Alice's cards:" << endl;
   for (auto it = aliceSet.begin(); it != aliceSet.end(); ++it) {
     cout << *it << endl;
   }
-  cout << "Bob's cards: " << endl;
+  cout << "Bob's cards:" << endl;
   for (auto it = bobSet.begin(); it != bobSet.end(); ++it) {
     cout << *it << endl;
   }
