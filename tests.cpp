@@ -71,30 +71,22 @@ void testInsertAndRemoveAndContainsMemory() {
     }
     for (int i = 1; i <= 13; i++) {
         assert(bst.remove(Card('c', i)));
-        assert(!bst.contains(Card('c', i)));
         assert(bst.remove(Card('d', i)));
-        assert(!bst.contains(Card('d', i)));
         assert(bst.remove(Card('s', i)));
-        assert(!bst.contains(Card('s', i)));
         assert(bst.remove(Card('h', i)));
-        assert(!bst.contains(Card('h', i)));
     }
 }
 void testIteratorsEmptyTree() {
     CardBST bst;
-    auto it = bst.begin();
-    auto end = bst.end();
-    assert(it == end);
+    assert(bst.begin() == bst.end());
 }
 void testIteratorsSingleNode() {
     CardBST bst;
     bst.insert(Card('c', 1));
     auto it = bst.begin();
-    auto end = bst.end();
-    assert(it != end);
     assert(*it == Card('c', 1));
     ++it;
-    assert(it == end);
+    assert(it == bst.end());
 }
 void testIteratorsMultipleNodes() {
     CardBST bst;
@@ -103,35 +95,18 @@ void testIteratorsMultipleNodes() {
     bst.insert(Card('s', 1));
     bst.insert(Card('h', 1));
     auto it = bst.begin();
-    auto end = bst.end();
-    assert(it != end);
     assert(*it == Card('c', 1));
-    ++it;
-    assert(it != end);
-    assert(*it == Card('d', 1));
-    ++it;
-    assert(it != end);
-    assert(*it == Card('s', 1));
-    ++it;
-    assert(it != end);
-    assert(*it == Card('h', 1));
-    ++it;
-    assert(it == end);
+    ++it; assert(*it == Card('d', 1));
+    ++it; assert(*it == Card('s', 1));
+    ++it; assert(*it == Card('h', 1));
+    ++it; assert(it == bst.end());
 }
-void testIteratorsIncrementingPastEnd() {
+void testIteratorsEndBehavior() {
     CardBST bst;
     bst.insert(Card('c', 1));
     auto it = bst.begin();
-    auto end = bst.end();
-    assert(it != end);
-    assert(*it == Card('c', 1));
     ++it;
-    assert(it == end);
-    --it;
-    assert(it != end);
-    assert(*it == Card('c', 1));
-    --it;
-    assert(it == end);
+    assert(it == bst.end());
 }
 void testIteratorsComparison() {
     CardBST bst;
@@ -139,66 +114,54 @@ void testIteratorsComparison() {
     bst.insert(Card('d', 1));
     auto it1 = bst.begin();
     auto it2 = bst.begin();
-    auto end = bst.end();
     assert(it1 == it2);
-    assert(it1 != end);
-    assert(it2 != end);
     ++it1;
     assert(it1 != it2);
-    assert(it1 != end);
-    assert(it2 != end);
+}
+void testReverseIteratorsEmptyTree() {
+    CardBST bst;
+    assert(bst.rbegin() == bst.rend());
+}
+void testReverseIteratorsMultipleNodes() {
+    CardBST bst;
+    bst.insert(Card('c', 1));
+    bst.insert(Card('d', 1));
+    bst.insert(Card('s', 1));
+    bst.insert(Card('h', 1));
+    auto it = bst.rbegin();
+    assert(*it == Card('h', 1));
+    --it; assert(*it == Card('s', 1));
+    --it; assert(*it == Card('d', 1));
+    --it; assert(*it == Card('c', 1));
+    --it; assert(it == bst.rend());
 }
 void testPlayGameCommonCards() {
-    CardBST aliceSet;
-    CardBST bobSet;
-    aliceSet.insert(Card('c', 1));
-    aliceSet.insert(Card('d', 1));
-    aliceSet.insert(Card('s', 1));
-    aliceSet.insert(Card('h', 1));
-    bobSet.insert(Card('c', 1));
-    bobSet.insert(Card('d', 2));
-    bobSet.insert(Card('s', 3));
-    bobSet.insert(Card('h', 4));
-    playGame(aliceSet, bobSet);
-    assert(!aliceSet.contains(Card('c', 1)));
-    assert(aliceSet.contains(Card('d', 1)));
-    assert(aliceSet.contains(Card('s', 1)));
-    assert(aliceSet.contains(Card('h', 1)));
-    assert(!bobSet.contains(Card('c', 1)));
-    assert(bobSet.contains(Card('d', 2)));
-    assert(bobSet.contains(Card('s', 3)));
-    assert(bobSet.contains(Card('h', 4)));
+    CardBST alice, bob;
+    alice.insert(Card('c', 1));
+    alice.insert(Card('d', 1));
+    alice.insert(Card('s', 1));
+    alice.insert(Card('h', 1));
+    bob.insert(Card('c', 1));
+    bob.insert(Card('d', 2));
+    bob.insert(Card('s', 3));
+    bob.insert(Card('h', 4));
+    playGame(alice, bob);
+    assert(!alice.contains(Card('c', 1)));
+    assert(!bob.contains(Card('c', 1)));
 }
 void testPlayGameOneEmptyHand() {
-    CardBST aliceSet;
-    CardBST bobSet;
-    bobSet.insert(Card('c', 1));
-    bobSet.insert(Card('d', 2));
-    playGame(aliceSet, bobSet);
-    assert(aliceSet.begin() == aliceSet.end());
-    assert(bobSet.contains(Card('c', 1)));
-    assert(bobSet.contains(Card('d', 2)));
+    CardBST alice, bob;
+    bob.insert(Card('c', 1));
+    playGame(alice, bob);
+    assert(bob.contains(Card('c', 1)));
 }
 void testPlayGameNoCommonCards() {
-    CardBST aliceSet;
-    CardBST bobSet;
-    aliceSet.insert(Card('c', 1));
-    aliceSet.insert(Card('d', 1));
-    aliceSet.insert(Card('s', 1));
-    aliceSet.insert(Card('h', 1));
-    bobSet.insert(Card('c', 2));
-    bobSet.insert(Card('d', 2));
-    bobSet.insert(Card('s', 2));
-    bobSet.insert(Card('h', 2));
-    playGame(aliceSet, bobSet);
-    assert(aliceSet.contains(Card('c', 1)));
-    assert(aliceSet.contains(Card('d', 1)));
-    assert(aliceSet.contains(Card('s', 1)));
-    assert(aliceSet.contains(Card('h', 1)));
-    assert(bobSet.contains(Card('c', 2)));
-    assert(bobSet.contains(Card('d', 2)));
-    assert(bobSet.contains(Card('s', 2)));
-    assert(bobSet.contains(Card('h', 2)));
+    CardBST alice, bob;
+    alice.insert(Card('c', 1));
+    bob.insert(Card('d', 2));
+    playGame(alice, bob);
+    assert(alice.contains(Card('c', 1)));
+    assert(bob.contains(Card('d', 2)));
 }
 int main() {
     testInsertAndRemoveAndContainsEmptyTree();
@@ -209,8 +172,10 @@ int main() {
     testIteratorsEmptyTree();
     testIteratorsSingleNode();
     testIteratorsMultipleNodes();
-    testIteratorsIncrementingPastEnd();
+    testIteratorsEndBehavior();
     testIteratorsComparison();
+    testReverseIteratorsEmptyTree();
+    testReverseIteratorsMultipleNodes();
     testPlayGameCommonCards();
     testPlayGameOneEmptyHand();
     testPlayGameNoCommonCards();

@@ -217,8 +217,10 @@ void playGame(CardBST& aliceSet, CardBST& bobSet) {
     }
     turnAlice = !turnAlice;
   }
+  cout << endl;
   cout << "Alice's cards:" << endl;
   aliceSet.printInOrder();
+  cout << endl;
   cout << "Bob's cards:" << endl;
   bobSet.printInOrder();
 }
